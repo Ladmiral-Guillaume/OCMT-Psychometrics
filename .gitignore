@@ -7,5 +7,7 @@
 *.knit.md
 *.html
 *.pdf
+!refs/
+!refs/**/*.pdf
 *.docx
 **/*.quarto_ipynb
