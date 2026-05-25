@@ -1,0 +1,11 @@
+.Rhistory
+.RData
+.Ruserdata
+.Rproj.user/
+.quarto/
+*_files/
+*.knit.md
+*.html
+*.pdf
+*.docx
+**/*.quarto_ipynb
