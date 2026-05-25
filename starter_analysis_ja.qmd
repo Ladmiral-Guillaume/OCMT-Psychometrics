@@ -1,0 +1,63 @@
+---
+title: "スターター分析"
+lang: ja
+format:
+  html:
+    embed-resources: true
+    toc: true
+---
+
+## 目的
+
+このファイルは、このリポジトリの最初の出発点です。
+文章、コード、出力、グラフを使った基本的な Quarto ワークフローを示します。
+
+## パッケージを読み込む
+
+```{r}
+library(tidyverse)
+library(ggthemes)
+```
+
+## データを読み込む
+
+```{r}
+course_data <- read_csv("data/example_data.csv", show_col_types = FALSE)
+
+course_data |>
+  slice_head(n = 6)
+```
+
+## 変数を確認する
+
+```{r}
+glimpse(course_data)
+```
+
+## 要約表
+
+```{r}
+course_data |>
+  group_by(section) |>
+  summarise(
+    mean_study_hours = mean(study_hours, na.rm = TRUE),
+    mean_exam_score = mean(exam_score, na.rm = TRUE),
+    mean_project_score = mean(project_score, na.rm = TRUE),
+    .groups = "drop"
+  )
+```
+
+## 最初のグラフ
+
+```{r}
+course_data |>
+  ggplot(aes(x = study_hours, y = exam_score, color = section)) +
+  geom_point(size = 2, alpha = 0.8) +
+  ggthemes::theme_clean()
+```
+
+グラフ内のラベルは、環境依存の文字化けを避けるため、そのままの変数名を使います。
+
+## 次のステップ
+
+このファイルの文章を 1 文編集して保存し、`quarto render starter_analysis_ja.qmd` を実行してから `starter_analysis_ja.html` を開いてください。

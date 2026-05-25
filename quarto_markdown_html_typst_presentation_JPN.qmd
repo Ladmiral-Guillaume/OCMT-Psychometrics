@@ -1,0 +1,607 @@
+---
+lang: ja
+format:
+  typst:
+    papersize: presentation-16-9
+    margin:
+      x: 6mm
+      y: 5mm
+    fontsize: 22pt
+    linestretch: 1.04
+    number-sections: false
+    fig-format: svg
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+````{=typst}
+#set page(fill: rgb("#ffffff"), numbering: none)
+#let jp_font = ("BIZ UDPGothic", "Yu Gothic", "Yu Gothic UI", "Meiryo", "Noto Sans CJK JP", "Noto Sans JP", "Arial")
+#let mono_font = ("Cascadia Mono", "Consolas", "DejaVu Sans Mono", "Yu Gothic UI", "Noto Sans CJK JP")
+#set text(font: jp_font, size: 22pt, fill: rgb("#111827"))
+#set par(justify: false, leading: 0.56em)
+
+#let ink = rgb("#111827")
+#let muted = rgb("#4b5563")
+#let accent = rgb("#174A7C")
+#let border = rgb("#1f2937")
+#let light_border = rgb("#cbd5e1")
+#let panel_bg = rgb("#ffffff")
+#let soft = rgb("#f8fafc")
+#let blue = rgb("#eef6ff")
+#let practice_blue = rgb("#eff6ff")
+#let code_bg = rgb("#ffffff")
+
+#let slide(title, body) = [
+  #pagebreak(weak: true)
+  #block(width: 100%)[#text(size: 34pt, weight: "bold", fill: ink)[#title]]
+  #v(8pt)
+  #body
+]
+
+#let section_slide(title, subtitle) = [
+  #pagebreak(weak: true)
+  #align(center + horizon)[
+    #text(size: 19pt, weight: "bold", fill: accent, tracking: 1.5pt)[SECTION]
+    #v(12pt)
+    #block(width: 100%)[#align(center)[#text(size: 39pt, weight: "bold", fill: ink)[#title]]]
+    #v(12pt)
+    #text(size: 24pt, fill: muted)[#subtitle]
+  ]
+]
+
+#let panel(label, body, fill_color) = block(
+  width: 100%,
+  inset: 8pt,
+  radius: 8pt,
+  fill: fill_color,
+  stroke: (paint: light_border, thickness: 0.9pt),
+)[
+  #text(size: 20pt, weight: "bold", fill: accent)[#label]
+  #v(6pt)
+  #body
+]
+
+#let source_panel(body) = panel([入力する内容], body, panel_bg)
+#let result_panel(body) = panel([表示される結果], body, panel_bg)
+
+#let pair(left, right) = grid(
+  columns: (1.08fr, 1fr),
+  gutter: 12pt,
+  source_panel(left),
+  result_panel(right),
+)
+
+#let two(left, right) = grid(
+  columns: (1fr, 1fr),
+  gutter: 12pt,
+  left,
+  right,
+)
+
+#let card(label, body) = panel(label, text(size: 24pt)[#body], soft)
+#let smallcard(label, body) = panel(label, text(size: 21pt)[#body], soft)
+
+#let note(body) = block(
+  width: 100%,
+  inset: 10pt,
+  radius: 8pt,
+  fill: blue,
+  stroke: (paint: rgb("#93c5fd"), thickness: 0.9pt),
+)[#text(size: 22pt)[#body]]
+
+#let practice(body) = block(
+  width: 100%,
+  inset: 10pt,
+  radius: 8pt,
+  fill: practice_blue,
+  stroke: (paint: rgb("#93c5fd"), thickness: 0.9pt),
+)[
+  #text(size: 18pt, weight: "bold", fill: accent)[練習]
+  #v(7pt)
+  #text(size: 23pt)[#body]
+]
+
+#let code_text(txt, size) = [
+  #set text(font: mono_font, size: size, fill: rgb("#111827"))
+  #for line in txt.split("\n") [
+    #line
+    #linebreak()
+  ]
+]
+
+#let codebox(txt, lang) = block(
+  width: 100%,
+  inset: 8pt,
+  radius: 6pt,
+  fill: code_bg,
+  stroke: (paint: border, thickness: 1pt),
+)[#code_text(txt, 20pt)]
+
+#let terminal(txt) = block(
+  width: 100%,
+  inset: 8pt,
+  radius: 6pt,
+  fill: code_bg,
+  stroke: (paint: border, thickness: 1pt),
+)[#code_text(txt, 22pt)]
+
+#let result_text(body) = text(size: 24pt)[#body]
+#let small_result(body) = text(size: 22pt)[#body]
+#slide([Quarto Markdown], [
+#v(4pt)
+#text(size: 30pt)[プレーンテキストでファイルを書く。]
+#v(6pt)
+#text(size: 30pt)[HTML文書としてレンダーする。]
+#v(14pt)
+#text(size: 23pt, fill: accent, weight: "bold")[Quarto公式サイト: #link("https://quarto.org")[quarto.org]]
+#v(16pt)
+#text(size: 23pt)[
+- Markdownは文書の構造を作る。
+- Quartoはソースファイルをレンダーする。
+- この授業ではHTMLだけを出力として使う。
+]
+])
+
+#slide([重要：記号は半角で入力する], [
+#text(size: 24pt, weight: "bold")[日本語入力中でも、Markdown記号とコードは半角で入力する。]
+#v(10pt)
+#two(
+  panel([使わない], [
+    #codebox("＃ はじめに\n＊強調＊\n＄x + 1＄", "markdown")
+    #v(6pt)
+    #text(size: 21pt)[全角記号は普通の文字になる。]
+  ], rgb("#fff1f2")),
+  panel([使う], [
+    #codebox("# はじめに\n*強調*\n$x + 1$", "markdown")
+    #v(6pt)
+    #text(size: 21pt)[半角記号だけがMarkdown記法として働く。]
+  ], rgb("#ecfdf5")),
+)
+#v(10pt)
+#note([特に #raw("＃") と #raw("#") は別の文字である。見た目ではなく入力文字を確認する。])
+])
+
+
+#slide([この授業で扱うこと], [
+#result_text([
+- シンプルな文書作成形式としてのMarkdown。
+- 文書をレンダーする道具としてのQuarto。
+- この授業で使う出力形式はHTMLだけである。
+- Rコードは、文書作成の基礎が明確になってから扱う。
+- Markdown記号は半角で入力する。
+])
+#v(14pt)
+#note([まずソースを書く。次にレンダーする。最後にコードを追加する。])
+])
+
+#slide([前提知識], [
+#result_text([
+- Markdownの知識は不要。
+- Quartoの知識は不要。
+- 基本的なファイル編集ができれば十分。
+- 最初の段階ではRコードは任意。
+])
+#v(14pt)
+#note([最初は出力形式をHTMLだけに限定する。])
+])
+
+#slide([ソースと出力を分けて考える], [
+#grid(columns: (1fr, auto, 1fr), gutter: 12pt,
+  card([ソースファイル], [このファイルを編集する。
+  #v(6pt)
+  #terminal("lesson.qmd")
+  #v(6pt)
+  プレーンテキストである。]),
+  align(center + horizon)[#text(size: 34pt, fill: accent)[→]],
+  card([出力ファイル], [Quartoがこのファイルを作る。
+  #v(6pt)
+  #terminal("lesson.html")
+  #v(6pt)
+  ブラウザで開く。]),
+)
+#v(14pt)
+#note([ソースは編集するファイルである。出力は読む、または共有するために作られるファイルである。])
+])
+
+#slide([中心となる考え], [
+#align(center + horizon)[
+#text(size: 30pt, weight: "bold")[Markdownは文書を書くための記法である。]
+#v(16pt)
+#text(size: 30pt, weight: "bold")[Quartoはレンダーするための道具である。]
+#v(16pt)
+#text(size: 30pt, weight: "bold")[HTMLは出力である。]
+]
+])
+
+#section_slide([まずMarkdownから始める], [コードを学ぶ前に、ソースの書き方を理解する。])
+
+#slide([最初のMarkdown文書], [
+#pair(
+  codebox("# はじめに\n\nこれは私の最初の文書です。\n\nこの文書は**Markdown**で書かれています。", "markdown"),
+  result_text([
+    #text(size: 29pt, weight: "bold")[はじめに]
+    #v(10pt)
+    これは私の最初の文書です。
+    #v(10pt)
+    この文書は#strong[Markdown]で書かれています。
+  ])
+)
+#v(8pt)
+#note([左側はソースである。右側はレンダー後の表示である。])
+])
+
+#slide([文字の強調], [
+#pair(
+  codebox("これは*斜体*の文字です。\n\nこれは**太字**の文字です。\n\nこれは***太字の斜体***です。", "markdown"),
+  result_text([
+    これは#emph[斜体]の文字です。
+    #v(8pt)
+    これは#strong[太字]の文字です。
+    #v(8pt)
+    これは#strong[#emph[太字の斜体]]です。
+  ])
+)
+])
+
+#slide([見出しを作る], [
+#pair(
+  codebox("# レベル1見出し\n\n## レベル2見出し\n\n### レベル3見出し", "markdown"),
+  result_text([
+    #text(size: 30pt, weight: "bold")[レベル1見出し]
+    #v(10pt)
+    #text(size: 25pt, weight: "bold")[レベル2見出し]
+    #v(10pt)
+    #text(size: 22pt, weight: "bold")[レベル3見出し]
+  ])
+)
+])
+
+#slide([リストを作る], [
+#pair(
+  codebox("- りんご\n- みかん\n- なし\n\n1. ファイルを開く\n2. 文章を編集する\n3. 文書をレンダーする", "markdown"),
+  result_text([
+    - りんご
+    - みかん
+    - なし
+    #v(10pt)
+    1. ファイルを開く
+    2. 文章を編集する
+    3. 文書をレンダーする
+  ])
+)
+])
+
+#slide([入れ子のリスト], [
+#pair(
+  codebox("1. 最初の手順\n2. 次の手順\n   - 詳細A\n   - 詳細B\n3. 最後の手順", "markdown"),
+  result_text([
+    1. 最初の手順
+    2. 次の手順
+      - 詳細A
+      - 詳細B
+    3. 最後の手順
+  ])
+)
+#v(10pt)
+#note([下位リストには字下げが必要である。字下げがないと、Markdownは入れ子構造を認識できない。])
+])
+
+#slide([練習：最初のMarkdownファイル], [
+#practice([
+#raw("my_first_markdown.md") というプレーンテキストファイルを作る。
+#v(6pt)
+次の三つを入れる。
+- 見出しを一つ。
+- 太字または斜体の語を一つ。
+- リストを一つ。
+])
+])
+
+#section_slide([文書要素を追加する], [リンク、画像、引用、コード、表、数式。])
+
+#slide([ハイパーリンクを入れる], [
+#pair(
+  codebox("普通のリンク:\nhttps://quarto.org\n\n名前付きリンク:\n[Quartoウェブサイト](https://quarto.org)", "markdown"),
+  result_text([
+    普通のリンク:
+    #v(4pt)
+    #raw("https://quarto.org")
+    #v(12pt)
+    名前付きリンク:
+    #v(4pt)
+    #link("https://quarto.org")[Quartoウェブサイト]
+  ])
+)
+])
+
+#slide([画像を入れる], [
+#pair(
+  codebox("![代替テキスト](image.png)\n\nパスは実在する画像ファイルを指す必要がある。", "markdown"),
+  result_text([
+    #block(width: 100%, height: 90pt, radius: 6pt, fill: rgb("#e3e7ea"), stroke: rgb("#b5bdc5"))[
+      #align(center + horizon)[ここに画像が表示される]
+    ]
+    #v(12pt)
+    角括弧の中の文は代替テキストである。
+  ])
+)
+])
+
+#slide([引用ブロックを使う], [
+#pair(
+  codebox("これは普通の文です。\n\n> これは引用ブロックです。", "markdown"),
+  result_text([
+    これは普通の文です。
+    #v(12pt)
+    #block(width: 100%, inset: 10pt, fill: rgb("#f8fafc"), stroke: (paint: accent, thickness: 1pt))[
+      これは引用ブロックです。
+    ]
+  ])
+)
+])
+
+#slide([インラインコードとコードブロック], [
+#pair(
+  codebox("ファイル名は `first_document.qmd` です。\n\n```r\nx <- 1 + 2\nx\n```", "markdown"),
+  result_text([
+    ファイル名は #raw("first_document.qmd") です。
+    #v(12pt)
+    #codebox("x <- 1 + 2\nx", "r")
+  ])
+)
+#v(10pt)
+#note([表示用コードブロックはコードを文字として示す。ここではコードを実行しない。])
+])
+
+#slide([表], [
+#pair(
+  codebox("| 項目 | 値 |\n|---|---:|\n| A | 10 |\n| B | 20 |", "markdown"),
+  result_text([
+    #table(
+      columns: (1fr, 1fr),
+      inset: 6pt,
+      [#strong[項目]], [#strong[値]],
+      [A], [10],
+      [B], [20],
+    )
+  ])
+)
+])
+
+#slide([インライン数式と表示数式], [
+#pair(
+  codebox("平均は $\\bar{x}$ と書く。\n\n$$\n\\bar{x} = \\frac{1}{n}\\sum_{i=1}^{n} x_i\n$$", "markdown"),
+  result_text([
+    平均は $overline(x)$ と書く。
+    #v(18pt)
+    $ overline(x) = frac(1, n) sum_(i=1)^n x_i $
+  ])
+)
+])
+
+#slide([練習：文書要素を増やす], [
+#practice([
+#raw("my_first_markdown.md") に戻る。
+#v(6pt)
+次の要素を追加する。
+- 名前付きリンクを一つ。
+- 引用ブロックを一つ。
+- 入れ子のリストを一つ。
+- 小さな表を一つ。
+])
+])
+
+#section_slide([MarkdownをQuarto文書にする], [上部にYAMLを追加し、HTMLにレンダーする。])
+
+#slide([.qmdファイル], [
+#result_text([
+Quarto文書は #raw(".qmd") という拡張子を使う。
+#v(10pt)
+通常、三つの部分から成る。
+])
+#v(12pt)
+#table(
+  columns: (1fr, 2fr),
+  inset: 7pt,
+  [#strong[部分]], [#strong[役割]],
+  [YAMLヘッダー], [文書の設定],
+  [Markdown本文], [通常の文章],
+  [コードチャンク], [任意の実行可能コード],
+)
+])
+
+#slide([最小限のHTML用YAML], [
+#pair(
+  codebox("---\ntitle: \"はじめてのQuarto文書\"\nformat:\n  html:\n    embed-resources: true\n---", "yaml"),
+  result_text([
+    - #raw("title") は文書タイトルを指定する。
+    - #raw("format: html") はHTML出力を指定する。
+    - #raw("embed-resources: true") は単一のHTMLファイルを作る。
+    #v(8pt)
+    #strong[YAMLでは字下げが重要である。]
+  ])
+)
+])
+
+#slide([最初の完全な.qmd文書], [
+#pair(
+  codebox("---\ntitle: \"はじめてのQuarto文書\"\nformat:\n  html:\n    embed-resources: true\n---\n\n# はじめに\n\nこの文書はMarkdownで書かれています。", "markdown"),
+  result_text([
+    #text(size: 28pt, weight: "bold")[はじめに]
+    #v(12pt)
+    この文書はMarkdownで書かれています。
+  ])
+)
+
+])
+
+#slide([HTMLにレンダーする], [
+#card([ターミナルで実行], [#terminal("quarto render my_first_quarto.qmd")])
+#v(12pt)
+#card([作成される出力ファイル], [#terminal("my_first_quarto.html")])
+#v(12pt)
+#note([HTMLファイルをブラウザで開く。])
+])
+
+#slide([目次を追加する], [
+#pair(
+  codebox("format:\n  html:\n    embed-resources: true\n    toc: true\n    toc-depth: 2", "yaml"),
+  result_text([
+    #strong[目次]
+    - はじめに
+    - 方法
+    - 結果
+  ])
+)
+])
+
+#slide([練習：Quartoファイルを作る], [
+#practice([
+#raw("my_first_quarto.qmd") を作る。
+#v(6pt)
+次の要素を入れる。
+- YAMLヘッダー。
+- 少なくとも三つの見出し。
+- 目次を一つ。
+- #raw("embed-resources: true")。
+#v(6pt)
+HTMLにレンダーする。
+])
+])
+
+#section_slide([コードは後で追加する], [文書構造が明確になってからコードを書く。])
+
+#slide([簡単なRコードチャンク], [
+#pair(
+  codebox("```{r}\n1 + 4\n```", "markdown"),
+  result_text([
+    #raw("[1] 5")
+    #v(14pt)
+    計算結果がレンダー後のHTMLに表示される。
+  ])
+)
+])
+
+#slide([コードを隠して結果だけを見せる], [
+#pair(
+  codebox("```{r}\n#| echo: false\n1 + 4\n```", "markdown"),
+  result_text([
+    #raw("[1] 5")
+    #v(14pt)
+    コードは非表示になる。結果は表示される。
+  ])
+)
+])
+
+#slide([Markdownとコードの役割は異なる], [
+#table(
+  columns: (1fr, 2fr),
+  inset: 8pt,
+  [#strong[要素]], [#strong[役割]],
+  [Markdown], [説明を書く],
+  [YAML], [文書設定を制御する],
+  [Rチャンク], [結果を計算する],
+  [HTML], [最終文書を表示する],
+)
+#v(12pt)
+#note([初心者には、コードより先に文書構造を理解することが重要である。])
+])
+
+#slide([練習：計算を一つ追加する], [
+#practice([
+#raw("my_first_quarto.qmd") にRコードチャンクを一つ追加する。
+#v(6pt)
+小さな計算を使う。例えば次のように書く。
+#v(6pt)
+#codebox("mean(c(10, 20, 30))", "r")
+#v(6pt)
+もう一度ファイルをレンダーする。
+])
+])
+
+#section_slide([数式と特殊な文字], [ドル記号と全角記号に注意する。])
+
+
+
+#slide([全角記号はMarkdownを壊す], [
+#two(
+  panel([間違い], [
+    #codebox("＃ タイトル\n\nこれは見出しにならない。", "markdown")
+    #v(8pt)
+    #text(size: 22pt)[全角の #raw("＃") は、ただの文字である。]
+  ], rgb("#fff1f2")),
+  panel([正しい書き方], [
+    #codebox("# タイトル\n\nこれは見出しになる。", "markdown")
+    #v(8pt)
+    #text(size: 22pt)[半角の #raw("#") だけが見出し記法である。]
+  ], rgb("#ecfdf5")),
+)
+#v(12pt)
+#note([日本語入力を使うときは、Markdown記号だけ半角モードで入力する。])
+])
+
+#slide([文字として使うドル記号], [
+#pair(
+  codebox("価格は $10 です。\n\n数式では両側を囲む: $x + 1$", "markdown"),
+  result_text([
+    価格は #raw("$")10 です。
+    #v(12pt)
+    数式では両側を囲む: $x + 1$
+  ])
+)
+])
+
+#section_slide([よくある間違い], [初心者の誤りの多くは小さな記法ミスである。])
+
+#slide([空行の不足], [
+#pair(
+  codebox("# タイトル\nこの段落が早く始まりすぎる。\n- リスト項目", "markdown"),
+  codebox("# タイトル\n\nこの段落には空行がある。\n\n- リスト項目", "markdown")
+)
+#v(8pt)
+#note([空行は、見出し、段落、リストを分けるために役立つ。])
+])
+
+#slide([YAMLの字下げミス], [
+#pair(
+  codebox("format:\nhtml:\ntoc: true", "yaml"),
+  codebox("format:\n  html:\n    toc: true", "yaml")
+)
+])
+
+#slide([保存とレンダーを混同する], [
+#table(
+  columns: (1fr, 2fr),
+  inset: 8pt,
+  [#strong[操作]], [#strong[意味]],
+  [保存], [#raw(".qmd") ソースファイルを更新する],
+  [レンダー], [#raw(".html") 出力ファイルを作成または更新する],
+  [HTMLを開く], [レンダー済みの結果を見る],
+)
+])
+
+#slide([作業の流れ], [
+#align(center + horizon)[
+#text(size: 34pt, weight: "bold")[.qmdを編集 → 保存 → レンダー → .htmlを開く]
+#v(20pt)
+#text(size: 25pt)[このサイクルを何度も繰り返す。]
+]
+])
+
+#slide([最終課題], [
+#practice([
+#raw("profile_document.qmd") を作る。
+#v(6pt)
+入れる内容：
+- HTML出力用のYAMLヘッダー。
+- 目次と三つ以上の見出し。
+- 太字または斜体、リンク、表、数式。
+- 任意でRコードチャンクを一つ。
+#v(6pt)
+Markdown記号は必ず半角で入力する。
+])
+])
+````

@@ -1,0 +1,65 @@
+---
+title: "Starter Analysis"
+format:
+  html:
+    embed-resources: true
+    toc: true
+---
+
+## Purpose
+
+This file is the main starting point for the repository.
+It shows a simple Quarto workflow with text, code, output, and a graph.
+
+## Load Packages
+
+```{r}
+library(tidyverse)
+library(ggthemes)
+```
+
+## Load the Data
+
+```{r}
+course_data <- read_csv("data/example_data.csv", show_col_types = FALSE)
+
+course_data |>
+  slice_head(n = 6)
+```
+
+## Inspect the Variables
+
+```{r}
+glimpse(course_data)
+```
+
+## Summary Table
+
+```{r}
+course_data |>
+  group_by(section) |>
+  summarise(
+    mean_study_hours = mean(study_hours, na.rm = TRUE),
+    mean_exam_score = mean(exam_score, na.rm = TRUE),
+    mean_project_score = mean(project_score, na.rm = TRUE),
+    .groups = "drop"
+  )
+```
+
+## First Plot
+
+```{r}
+course_data |>
+  ggplot(aes(x = study_hours, y = exam_score, color = section)) +
+  geom_point(size = 2, alpha = 0.8) +
+  ggthemes::theme_clean() +
+  labs(
+    x = "Study hours",
+    y = "Exam score",
+    color = "Section"
+  )
+```
+
+## Next Step
+
+Edit one sentence in this file, save it, run `quarto render starter_analysis.qmd`, and then open `starter_analysis.html`.

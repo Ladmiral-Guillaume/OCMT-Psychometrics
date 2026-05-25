@@ -1,0 +1,58 @@
+---
+title: "第2デモ"
+lang: ja
+format:
+  html:
+    embed-resources: true
+    toc: true
+---
+
+## 目的
+
+このファイルは 2 つ目のデモ文書です。
+リポジトリ内のデータを使って、`ggformula`、`tinyplot`、`modelsummary` を示します。
+
+```{r}
+library(tidyverse)
+library(ggformula)
+library(modelsummary)
+library(tinyplot)
+```
+
+## データを整える
+
+```{r}
+course_data <- read_csv("data/example_data.csv", show_col_types = FALSE)
+```
+
+## formula 形式のグラフ
+
+```{r}
+gf_point(
+  exam_score ~ study_hours,
+  color = ~ section,
+  data = course_data
+)
+```
+
+## Tiny Plot
+
+```{r}
+tinyplot(
+  x = course_data$project_score,
+  y = course_data$exam_score,
+  color = course_data$section,
+  xlab = "project_score",
+  ylab = "exam_score"
+)
+```
+
+このテンプレートでは、グラフ中の文字は移植性を優先して英数字のまま使います。
+
+## モデル要約
+
+```{r}
+score_model <- lm(exam_score ~ study_hours + project_score + section, data = course_data)
+
+modelsummary(score_model)
+```

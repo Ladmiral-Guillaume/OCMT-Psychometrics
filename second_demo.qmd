@@ -1,0 +1,55 @@
+---
+title: "Second Demonstration"
+format:
+  html:
+    embed-resources: true
+    toc: true
+---
+
+## Purpose
+
+This file is a second demonstration document.
+It uses `ggformula`, `tinyplot`, and `modelsummary` with the repository data.
+
+```{r}
+library(tidyverse)
+library(ggformula)
+library(modelsummary)
+library(tinyplot)
+```
+
+## Clean Data
+
+```{r}
+course_data <- read_csv("data/example_data.csv", show_col_types = FALSE)
+```
+
+## Formula-Based Plot
+
+```{r}
+gf_point(
+  exam_score ~ study_hours,
+  color = ~ section,
+  data = course_data
+)
+```
+
+## Tiny Plot
+
+```{r}
+tinyplot(
+  x = course_data$project_score,
+  y = course_data$exam_score,
+  color = course_data$section,
+  xlab = "Project score",
+  ylab = "Exam score"
+)
+```
+
+## Model Summary
+
+```{r}
+score_model <- lm(exam_score ~ study_hours + project_score + section, data = course_data)
+
+modelsummary(score_model)
+```
