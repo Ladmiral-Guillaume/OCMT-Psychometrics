@@ -1,0 +1,22 @@
+{
+  "name": "quarto_r_course_template",
+  "image": "ghcr.io/rocker-org/devcontainer/r-ver:4",
+  "features": {
+    "ghcr.io/rocker-org/devcontainer-features/quarto-cli:1": {}
+  },
+  "customizations": {
+    "codespaces": {
+      "openFiles": [
+        "README.md",
+        "starter_analysis.qmd"
+      ]
+    },
+    "vscode": {
+      "extensions": [
+        "quarto.quarto",
+        "REditorSupport.r"
+      ]
+    }
+  },
+  "postCreateCommand": "bash scripts/post_create_setup.sh"
+}
